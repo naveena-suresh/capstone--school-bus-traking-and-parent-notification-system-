@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>School Bus Tracking System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f6fc;
+            color: #222;
+        }
+
+        header {
+            background: #1565c0;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        header p {
+            margin: 8px 0 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 25px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        h2 {
+            color: #1565c0;
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #bbb;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        button {
+            background: #1565c0;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 7px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 18px;
+            margin-right: 8px;
+        }
+
+        button:hover {
+            background: #0d47a1;
+        }
+
+        .secondary {
+            background: #455a64;
+        }
+
+        .location-button {
+            background: #2e7d32;
+        }
+
+        .location-button:hover {
+            background: #1b5e20;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .info {
+            background: #f5f8fc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #1565c0;
+        }
+
+        .info-title {
+            font-weight: bold;
+            color: #1565c0;
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .notification {
+            background: #e3f2fd;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 7px;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .status-box {
+            text-align: center;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 10px;
+        }
+
+        .location-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .location-item {
+            background: #f5f8fc;
+            padding: 18px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .location-item h3 {
+            color: #1565c0;
+        }
+
+        .location-status {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 7px;
+            background: #f5f8fc;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        @media (max-width: 750px) {
+            .form-grid,
+            .dashboard,
+            .location-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🚌 School Bus Tracking System</h1>
+    <p>Safe • Smart • Real-Time School Transportation</p>
+</header>
+
+<div class="container">
+
+    <!-- STUDENT DETAILS -->
+    <div class="card">
+
+        <h2>Student & Bus Details</h2>
+
+        <div class="form-grid">
+
+            <div>
+                <label>Student Name</label>
+                <input type="text" id="student" placeholder="Enter student name">
+            </div>
+
+            <div>
+                <label>Student ID</label>
+                <input type="text" id="studentId" placeholder="Enter student ID">
+            </div>
+
+            <div>
+                <label>Parent Name</label>
+                <input type="text" id="parent" placeholder="Enter parent name">
+            </div>
+
+            <div>
+                <label>Phone Number</label>
+                <input type="text" id="phone" placeholder="Enter phone number">
+            </div>
+
+            <div>
+                <label>Bus Number</label>
+                <input type="text" id="bus" placeholder="Enter bus number">
+            </div>
+
+            <div>
+                <label>Driver Name</label>
+                <input type="text" id="driver" placeholder="Enter driver name">
+            </div>
+
+            <div>
+                <label>Bus Stop</label>
+                <input type="text" id="location" placeholder="Enter bus stop">
+            </div>
+
+            <div>
+                <label>Route</label>
+                <input type="text" id="route" placeholder="Enter route">
+            </div>
+
+        </div>
+
+        <button onclick="saveDetails()">Save Details</button>
+
+        <p id="saveMessage"></p>
+
+    </div>
+
+
+    <!-- STUDENT INFORMATION -->
+    <div class="card">
+
+        <h2>Student Information</h2>
+
+        <div class="dashboard">
+
+            <div class="info">
+                <div class="info-title">Student</div>
+                <p class="info-value" id="showStudent">Not Added</p>
+            </div>
+
+            <div class="info">
+                <div class="info-title">Student ID</div>
+                <p class="info-value" id="showStudentId">Not Added</p>
+            </div>
+
+            <div class="info">
+                <div class="info-title">Parent</div>
+                <p class="info-value" id="showParent">Not Added</p>
+            </div>
+
+            <div class="info">
+                <div class="info-title">Bus</div>
+                <p class="info-value" id="showBus">Not Added</p>
+            </div>
+
+            <div class="info">
+                <div class="info-title">Driver</div>
+                <p class="info-value" id="showDriver">Not Added</p>
+            </div>
+
+            <div class="info">
+                <div class="info-title">Bus Stop</div>
+                <p class="info-value" id="showLocation">Not Added</p>
+            </div>
+
+            <div class="info">
+                <div class="info-title">Route</div>
+                <p class="info-value" id="showRoute">Not Added</p>
+            </div>
+
+        </div>
+
+        <button class="secondary" onclick="loadStudent()">
+            Refresh Student Details
+        </button>
+
+    </div>
+
+
+    <!-- BUS DETAILS -->
+    <div class="card">
+
+        <h2>🚌 Bus Details</h2>
+
+        <div class="dashboard">
+
+            <div class="info">
+                <div class="info-title">Bus Number</div>
+                <p class="info-value" id="busNumber">Not Added</p>
+            </div>
+
+            <div class="info">
+                <div class="info-title">Driver</div>
+                <p class="info-value" id="busDriver">Not Added</p>
+            </div>
+
+            <div class="info">
+                <div class="info-title">Route</div>
+                <p class="info-value" id="busRoute">Not Added</p>
+            </div>
+
+            <div class="info">
+                <div class="info-title">Status</div>
+                <p class="info-value" id="busStatus">Stopped</p>
+            </div>
+
+        </div>
+
+        <button class="secondary" onclick="loadBus()">
+            Refresh Bus Details
+        </button>
+
+    </div>
+
+
+    <!-- LIVE LOCATION -->
+    <div class="card">
+
+        <h2>📍 Live Bus Location</h2>
+
+        <div class="location-grid">
+
+            <div class="location-item">
+                <h3>Latitude</h3>
+                <p id="latitude">0</p>
+            </div>
+
+            <div class="location-item">
+                <h3>Longitude</h3>
+                <p id="longitude">0</p>
+            </div>
+
+            <div class="location-item">
+                <h3>Speed</h3>
+                <p id="speed">0 km/h</p>
+            </div>
+
+        </div>
+
+        <button class="location-button" onclick="updateCurrentLocation()">
+            📍 Update Current Location
+        </button>
+
+        <button onclick="loadLocation()">
+            Refresh Location
+        </button>
+
+        <div class="location-status" id="locationMessage">
+            Location not updated yet.
+        </div>
+
+    </div>
+
+
+    <!-- ETA -->
+    <div class="card">
+
+        <h2>⏱ Estimated Arrival</h2>
+
+        <div class="status-box">
+            <h2 id="eta">10 minutes</h2>
+            <p id="etaMessage">Estimated arrival time</p>
+        </div>
+
+        <button onclick="loadETA()">
+            Check ETA
+        </button>
+
+    </div>
+
+
+    <!-- NOTIFICATIONS -->
+    <div class="card">
+
+        <h2>🔔 Notifications</h2>
+
+        <div id="notifications">
+            <div class="notification">
+                No notifications yet.
+            </div>
+        </div>
+
+        <button class="secondary" onclick="loadNotifications()">
+            Refresh Notifications
+        </button>
+
+    </div>
+
+
+    <!-- SYSTEM STATUS -->
+    <div class="card">
+
+        <h2>⚙ System Status</h2>
+
+        <div class="status-box">
+
+            <h3 id="systemStatus">Checking...</h3>
+
+            <p>
+                Total Buses:
+                <strong id="totalBuses">0</strong>
+            </p>
+
+            <p>
+                Total Students:
+                <strong id="totalStudents">0</strong>
+            </p>
+
+        </div>
+
+        <button onclick="loadStatus()">
+            Refresh Status
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // ==================================================
+    // SAVE DETAILS
+    // ==================================================
+
+    async function saveDetails() {
+
+        const data = {
+
+            student: document.getElementById("student").value,
+
+            studentId:
+                document.getElementById("studentId").value,
+
+            parent:
+                document.getElementById("parent").value,
+
+            phone:
+                document.getElementById("phone").value,
+
+            bus:
+                document.getElementById("bus").value,
+
+            driver:
+                document.getElementById("driver").value,
+
+            location:
+                document.getElementById("location").value,
+
+            route:
+                document.getElementById("route").value
+        };
+
+
+        try {
+
+            const response = await fetch(
+                "/api/save-details",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(data)
+                }
+            );
+
+
+            const result = await response.json();
+
+            const message =
+                document.getElementById("saveMessage");
+
+
+            if (result.success) {
+
+                message.className = "success";
+
+                message.innerText =
+                    result.message;
+
+                loadStudent();
+                loadBus();
+                loadStatus();
+                loadLocation();
+
+            } else {
+
+                message.className = "error";
+
+                message.innerText =
+                    result.message;
+            }
+
+        } catch (error) {
+
+            document.getElementById("saveMessage").className =
+                "error";
+
+            document.getElementById("saveMessage").innerText =
+                "Server connection failed.";
+        }
+    }
+
+
+    // ==================================================
+    // LOAD STUDENT
+    // ==================================================
+
+    async function loadStudent() {
+
+        try {
+
+            const response =
+                await fetch("/api/student");
+
+            const data =
+                await response.json();
+
+
+            document.getElementById("showStudent").innerText =
+                data.student || "Not Added";
+
+            document.getElementById("showStudentId").innerText =
+                data.studentId || "Not Added";
+
+            document.getElementById("showParent").innerText =
+                data.parent || "Not Added";
+
+            document.getElementById("showBus").innerText =
+                data.bus || "Not Added";
+
+            document.getElementById("showDriver").innerText =
+                data.driver || "Not Added";
+
+            document.getElementById("showLocation").innerText =
+                data.location || "Not Added";
+
+            document.getElementById("showRoute").innerText =
+                data.route || "Not Added";
+
+        } catch (error) {
+
+            console.log(error);
+        }
+    }
+
+
+    // ==================================================
+    // LOAD BUS
+    // ==================================================
+
+    async function loadBus() {
+
+        try {
+
+            const response =
+                await fetch("/api/bus");
+
+            const data =
+                await response.json();
+
+
+            document.getElementById("busNumber").innerText =
+                data.bus_number || "Not Added";
+
+            document.getElementById("busDriver").innerText =
+                data.driver_name || "Not Added";
+
+            document.getElementById("busRoute").innerText =
+                data.route_name || "Not Added";
+
+            document.getElementById("busStatus").innerText =
+                data.status || "Stopped";
+
+        } catch (error) {
+
+            console.log(error);
+        }
+    }
+
+
+    // ==================================================
+    // LOAD LIVE LOCATION
+    // ==================================================
+
+    async function loadLocation() {
+
+        try {
+
+            const response =
+                await fetch("/api/location");
+
+            const data =
+                await response.json();
+
+
+            document.getElementById("latitude").innerText =
+                data.latitude ?? 0;
+
+            document.getElementById("longitude").innerText =
+                data.longitude ?? 0;
+
+            document.getElementById("speed").innerText =
+                (data.speed ?? 0) + " km/h";
+
+        } catch (error) {
+
+            console.log(error);
+
+            document.getElementById("locationMessage").innerText =
+                "Unable to load location.";
+        }
+    }
+
+
+    // ==================================================
+    // UPDATE CURRENT GPS LOCATION
+    // ==================================================
+
+    function updateCurrentLocation() {
+
+        const message =
+            document.getElementById("locationMessage");
+
+
+        if (!navigator.geolocation) {
+
+            message.innerText =
+                "GPS location is not supported by this browser.";
+
+            return;
+        }
+
+
+        message.innerText =
+            "Getting current location...";
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            async function(position) {
+
+                const latitude =
+                    position.coords.latitude;
+
+                const longitude =
+                    position.coords.longitude;
+
+
+                let speed = 0;
+
+
+                if (
+                    position.coords.speed !== null &&
+                    position.coords.speed >= 0
+                ) {
+
+                    speed =
+                        (position.coords.speed * 3.6).toFixed(2);
+                }
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "/api/update-location",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+                                    latitude: latitude,
+                                    longitude: longitude,
+                                    speed: speed
+                                })
+                            }
+                        );
+
+
+                    const result =
+                        await response.json();
+
+
+                    if (result.success) {
+
+                        message.innerText =
+                            "✅ Current location updated successfully!";
+
+                        loadLocation();
+                        loadBus();
+                        loadStatus();
+
+                    } else {
+
+                        message.innerText =
+                            "❌ " + result.message;
+                    }
+
+                } catch (error) {
+
+                    console.log(error);
+
+                    message.innerText =
+                        "❌ Server connection failed.";
+                }
+            },
+
+
+            function(error) {
+
+                if (error.code === 1) {
+
+                    message.innerText =
+                        "❌ Location permission denied.";
+
+                } else if (error.code === 2) {
+
+                    message.innerText =
+                        "❌ Location unavailable.";
+
+                } else if (error.code === 3) {
+
+                    message.innerText =
+                        "❌ Location request timed out.";
+
+                } else {
+
+                    message.innerText =
+                        "❌ Unable to get current location.";
+                }
+            },
+
+
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    }
+
+
+    // ==================================================
+    // LOAD ETA
+    // ==================================================
+
+    async function loadETA() {
+
+        try {
+
+            const response =
+                await fetch("/api/eta");
+
+            const data =
+                await response.json();
+
+
+            document.getElementById("eta").innerText =
+                data.eta;
+
+            document.getElementById("etaMessage").innerText =
+                data.message;
+
+        } catch (error) {
+
+            console.log(error);
+        }
+    }
+
+
+    // ==================================================
+    // LOAD NOTIFICATIONS
+    // ==================================================
+
+    async function loadNotifications() {
+
+        try {
+
+            const response =
+                await fetch("/api/notifications");
+
+            const data =
+                await response.json();
+
+
+            const container =
+                document.getElementById("notifications");
+
+            container.innerHTML = "";
+
+
+            data.forEach(function(notification) {
+
+                const div =
+                    document.createElement("div");
+
+                div.className =
+                    "notification";
+
+                div.innerText =
+                    notification.message;
+
+                container.appendChild(div);
+
+            });
+
+        } catch (error) {
+
+            console.log(error);
+        }
+    }
+
+
+    // ==================================================
+    // LOAD SYSTEM STATUS
+    // ==================================================
+
+    async function loadStatus() {
+
+        try {
+
+            const response =
+                await fetch("/api/status");
+
+            const data =
+                await response.json();
+
+
+            document.getElementById("systemStatus").innerText =
+                data.status || "Offline";
+
+            document.getElementById("totalBuses").innerText =
+                data.totalBuses ?? 0;
+
+            document.getElementById("totalStudents").innerText =
+                data.totalStudents ?? 0;
+
+        } catch (error) {
+
+            document.getElementById("systemStatus").innerText =
+                "Offline";
+        }
+    }
+
+
+    // ==================================================
+    // LOAD ALL DATA
+    // ==================================================
+
+    window.onload = function() {
+
+        loadStudent();
+
+        loadBus();
+
+        loadLocation();
+
+        loadETA();
+
+        loadNotifications();
+
+        loadStatus();
+
+    };
+
+</script>
+
+</body>
+</html>

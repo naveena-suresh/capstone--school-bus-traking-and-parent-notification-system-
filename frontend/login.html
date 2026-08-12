@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - School Bus Tracking</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f4f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-box {
+            background: white;
+            width: 350px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            cursor: pointer;
+        }
+
+        .signup {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <h1>🔐 Login</h1>
+
+    <form onsubmit="login(event)">
+
+        <label>Email</label>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Enter email"
+            required
+        >
+
+        <label>Password</label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter password"
+            required
+        >
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+    <p id="message"></p>
+
+    <div class="signup">
+        Don't have an account?
+        <a href="/signup">Signup</a>
+    </div>
+
+</div>
+
+
+<script>
+
+async function login(event) {
+
+    event.preventDefault();
+
+    const email =
+        document.getElementById("email").value;
+
+    const password =
+        document.getElementById("password").value;
+
+
+    try {
+
+        const response = await fetch(
+            "/api/login",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            }
+        );
+
+
+        const result = await response.json();
+
+
+        if (result.success) {
+
+            document.getElementById("message").innerText =
+                "✅ Login successful!";
+
+            setTimeout(function() {
+
+                window.location.href = "/";
+
+            }, 1000);
+
+        } else {
+
+            document.getElementById("message").innerText =
+                "❌ " + result.message;
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("message").innerText =
+            "❌ Server connection error.";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

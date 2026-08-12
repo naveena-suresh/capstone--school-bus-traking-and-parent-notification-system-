@@ -1,0 +1,70 @@
+# Problem Statement
+
+## Project Title
+School Bus Tracking and Parent Notification System
+
+## Introduction
+
+School transportation is an important part of student safety. Parents need
+reliable information about their children's school bus location and expected
+arrival time.
+
+The School Bus Tracking and Parent Notification System is designed to help
+parents monitor school bus information through a web-based application.
+
+## Problem
+
+Traditional school bus transportation systems may not provide parents with
+real-time information about:
+
+- Bus location
+- Bus status
+- Driver details
+- Student details
+- Expected arrival time
+- Important notifications
+
+This can cause uncertainty and make it difficult for parents to know when the
+bus will arrive.
+
+## Proposed Solution
+
+The proposed system provides a centralized web application that allows parents
+and administrators to access school bus information.
+
+The system provides:
+
+- Student information management
+- Bus and driver information
+- Route information
+- Live bus location
+- ETA prediction
+- Parent notifications
+- User login and signup
+- Database management
+- Admin overview
+
+## Objectives
+
+1. To provide real-time school bus tracking.
+2. To provide student and bus information.
+3. To predict the estimated arrival time of the bus.
+4. To send important notifications to parents.
+5. To securely manage user information.
+6. To store project data using a database.
+7. To provide an easy-to-use web interface.
+
+## Technology Stack
+
+- Frontend: HTML, CSS, JavaScript
+- Backend: Python Flask
+- Database: SQLite
+- Authentication: Session/JWT
+- Development Environment: Visual Studio Code
+
+## Expected Outcome
+
+The system will provide parents with useful and timely school bus information
+through a simple web interface. It will improve communication between the
+school, bus management system, and parents and support safer school
+transportation.
