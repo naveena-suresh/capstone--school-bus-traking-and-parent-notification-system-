@@ -1,109 +1,107 @@
 import sqlite3
 from pathlib import Path
 
-
-BASE_DIR = Path(__file__).resolve().parent
-DATABASE_PATH = BASE_DIR / "school_bus.db"
+DATABASE_PATH = Path(__file__).resolve().parent / "school_bus.db"
 
 
 def get_connection():
-
-    connection = sqlite3.connect(DATABASE_PATH)
-
-    connection.row_factory = sqlite3.Row
-
-    return connection
+    conn = sqlite3.connect(DATABASE_PATH)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
 
 
 def initialize_database():
+    conn = get_connection()
+    cursor = conn.cursor()
 
-    connection = get_connection()
-    cursor = connection.cursor()
-
-
-    # =========================
-    # USERS TABLE
-    # =========================
-
+    # Users table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
-            role TEXT NOT NULL
+            role TEXT NOT NULL DEFAULT 'Parent'
         )
     """)
 
-
-    # =========================
-    # BUSES TABLE
-    # =========================
-
+    # Buses table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS buses (
             bus_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            bus_number TEXT UNIQUE NOT NULL,
-            driver_name TEXT NOT NULL,
-            route_name TEXT NOT NULL,
-            status TEXT DEFAULT 'Stopped',
-            latitude REAL DEFAULT 0,
-            longitude REAL DEFAULT 0
+            bus_number TEXT NOT NULL,
+            driver_name TEXT,
+            route_name TEXT,
+            status TEXT DEFAULT 'Waiting',
+            latitude REAL,
+            longitude REAL
         )
     """)
 
-
-    # =========================
-    # STUDENTS TABLE
-    # =========================
-
+    # Students table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS students (
             student_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_code TEXT,
             name TEXT NOT NULL,
             parent_id INTEGER,
             bus_id INTEGER,
             stop_name TEXT NOT NULL,
-
-            FOREIGN KEY(parent_id)
-            REFERENCES users(user_id),
-
-            FOREIGN KEY(bus_id)
-            REFERENCES buses(bus_id)
+            FOREIGN KEY (parent_id) REFERENCES users(user_id),
+            FOREIGN KEY (bus_id) REFERENCES buses(bus_id)
         )
     """)
 
-
-    # =========================
-    # BUS LOCATIONS TABLE
-    # =========================
-
+    # Bus location history table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS bus_locations (
             location_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            bus_id INTEGER,
+            bus_id INTEGER NOT NULL,
             latitude REAL NOT NULL,
             longitude REAL NOT NULL,
             speed REAL DEFAULT 0,
             recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-            FOREIGN KEY(bus_id)
-            REFERENCES buses(bus_id)
+            FOREIGN KEY (bus_id) REFERENCES buses(bus_id)
         )
     """)
 
+    # Upgrade existing students table safely
+    student_columns = {
+        row["name"]
+        for row in cursor.execute(
+            "PRAGMA table_info(students)"
+        ).fetchall()
+    }
 
-    connection.commit()
+    if "student_code" not in student_columns:
+        cursor.execute(
+            "ALTER TABLE students ADD COLUMN student_code TEXT"
+        )
 
-    connection.close()
+    # Upgrade existing buses table safely
+    bus_columns = {
+        row["name"]
+        for row in cursor.execute(
+            "PRAGMA table_info(buses)"
+        ).fetchall()
+    }
 
+    if "latitude" not in bus_columns:
+        cursor.execute("ALTER TABLE buses ADD COLUMN latitude REAL")
 
-# =========================
-# RUN DATABASE
-# =========================
+    if "longitude" not in bus_columns:
+        cursor.execute("ALTER TABLE buses ADD COLUMN longitude REAL")
+
+    if "status" not in bus_columns:
+        cursor.execute(
+            "ALTER TABLE buses ADD COLUMN status TEXT DEFAULT 'Waiting'"
+        )
+
+    conn.commit()
+    conn.close()
+
 
 if __name__ == "__main__":
-
     initialize_database()
-
-    print("Database initialized successfully.")
+    print("Database initialized successfully!")
